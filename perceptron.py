@@ -32,6 +32,28 @@ class Perceptron:
             print(f"Epoch: {epoch}\tAccuracy: {self._compute_acc(y, y_hat)}")
         return
 
-    #TODO: Define _compute_acc
-    #TODO: Define predict
-    #TODO: Define wt*sample function
+    def _compute_acc(self, y, y_hat):
+        """
+        Compute the accuracy of the perceptron. Accuracy = number of correctly classified datapoints / total number of data points
+        Arguments:
+            y: Actual label for a given datapoint, is either +1 or -1
+            y_hat: Label predicted by the perceptron, is either +1 or -1
+        Returns:
+            Accuracy as floating point value between 0 and 1
+        """
+        return (sum(np.array(y_hat) == np.array(y)) / float(len(y)))
+    
+    def predict(self, x, wt):
+        """
+        Generate a prediction output for a given datapoint based on the application of the activation function on the datapoint and the weight vector.
+        Arguments:
+            x: Input data point of the shape [1*m | m = number of features]
+            wt: weight vector of the shape [1*m | m = number of features] from the trained perceptron
+        Returns:
+            Prediction label that is either +1 or -1
+        """
+        sum = np.sum(np.dot(x, np.transpose(wt)))
+        if sum > 0.0:
+            return 1
+        else:
+            return -1
