@@ -1,6 +1,7 @@
 import numpy as np
 import random
-import matplotlib as plt
+import pandas as pd
+from matplotlib import pyplot as plt
 
 class Perceptron:
     def __init__(self, epochs=100):
@@ -28,7 +29,7 @@ class Perceptron:
             None
         """
         # Defining a weight vector, randomly initialised to values between 0 and 1. shape: 
-        wt = np.random.rand(X.shape[1],)
+        wt = np.zeros(X.shape[1])
 
         # Defining the training strategy
         acc = []
@@ -75,22 +76,36 @@ class Perceptron:
 
 if __name__ == "__main__":
     N_range = [8, 20, 40]
+    # A_range = [0.75, 1, 1.25]
     A_range = [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3]
-    jim_bob = Perceptron(500)
 
-    data = []
+    model = Perceptron(500)
+    plot_data = pd.DataFrame(columns=["N", "P", "Separable_Count", "alpha"])
     for n in N_range:
         print("N: ", n)
-        data_cond = []
         for a in A_range:
             p = int(a*n)
             print("P: ", p)
             seperable_count = 0
             for i in range(0,50):
-                X, y = jim_bob.generate_data(n, p)
-                if jim_bob.fit(X,y):
+                X, y = model.generate_data(n, p)
+                if model.fit(X,y):
                     seperable_count += 1
-            data_cond.append(seperable_count/50)
-        data.append(data_cond)
+            plot_data = plot_data.append({"N": n, "P": p, "Separable_Count": seperable_count/50, "alpha": a}, ignore_index=True)
+    plot_data.to_csv("Plot_Data.csv")
+    
+    x = A_range
+    y1 = plot_data[plot_data["N"]==8]["Separable_Count"]
+    y2 = plot_data[plot_data["N"]==20]["Separable_Count"]
+    y3 = plot_data[plot_data["N"]==40]["Separable_Count"]
+    fig, ax = plt.subplots()
+    ax.plot(x,y1,c='b',marker="^",ls='--',label='N = 8',fillstyle='none')
+    ax.plot(x,y2,c='g',marker=(8,2,0),ls='--',label='N = 20')
+    ax.plot(x,y3,c='k',ls='-',label='N = 40')
 
-    print(data)
+    ax.set(xlabel='alpha', ylabel='Probability of l.s.', title='Prob/alpha')
+    ax.grid()
+    plt.legend(loc=2)
+
+    fig.savefig("test.png")
+    plt.show()
