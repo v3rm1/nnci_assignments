@@ -1,9 +1,19 @@
 import numpy as np
+import random
 
 class Perceptron:
-    def __init__(self, learning_rate=0.01, epochs=10):
-        self.learning_rate = learning_rate
+    def __init__(self, epochs=100):
         self.epochs = epochs
+
+    def generate_data(self, n_features, p_data):
+        X = np.zeros((p_data, n_features))
+        y = np.zeros(p_data)
+        for i in range(p_data):
+            for j in range(n_features):
+                X[i,j] = random.uniform(0,1)
+            y[i] = (random.randint(0,1)*2)-1
+
+        return X, y
     
     def fit(self, X, y):
         """
@@ -25,10 +35,10 @@ class Perceptron:
             for s_idx, sample in enumerate(X):
                 pred = self.predict(sample, wt)
                 y_hat.append(pred)
-                for f_idx, feature in enumerate(wt):
-                    del_wt = self.learning_rate * (y[s_idx] - pred)
-                    del_wt = del_wt * sample[f_idx - 1]
-                    wt[f_idx - 1] = wt[f_idx - 1] + del_wt
+                if not pred == y[s_idx]:
+                    del_wt = (1/X.shape[1])*y[s_idx]*sample
+                    wt = np.add(wt, del_wt)
+
             print(f"Epoch: {epoch}\tAccuracy: {self._compute_acc(y, y_hat)}")
         return
 
@@ -57,3 +67,10 @@ class Perceptron:
             return 1
         else:
             return -1
+
+if __name__ == "__main__":
+    N = 2
+    P = 10
+    jim_bob = Perceptron()
+    X, y = jim_bob.generate_data(N, P)
+    jim_bob.fit(X, y)
