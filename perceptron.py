@@ -10,7 +10,7 @@ class Perceptron:
         y = np.zeros(p_data)
         for i in range(p_data):
             for j in range(n_features):
-                X[i,j] = random.uniform(0,1)
+                X[i,j] = random.gauss(0,1)
             y[i] = (random.randint(0,1)*2)-1
 
         return X, y
@@ -30,6 +30,7 @@ class Perceptron:
         wt = np.random.rand(X.shape[1],)
 
         # Defining the training strategy
+        acc = []
         for epoch in range(self.epochs):
             y_hat = []
             for s_idx, sample in enumerate(X):
@@ -38,9 +39,10 @@ class Perceptron:
                 if not pred == y[s_idx]:
                     del_wt = (1/X.shape[1])*y[s_idx]*sample
                     wt = np.add(wt, del_wt)
-
-            print(f"Epoch: {epoch}\tAccuracy: {self._compute_acc(y, y_hat)}")
-        return
+            acc.append(self._compute_acc(y, y_hat))
+            if acc[-1] == 1:
+                return 1
+        return 0
 
     def _compute_acc(self, y, y_hat):
         """
@@ -69,8 +71,23 @@ class Perceptron:
             return -1
 
 if __name__ == "__main__":
-    N = 2
-    P = 10
-    jim_bob = Perceptron()
-    X, y = jim_bob.generate_data(N, P)
-    jim_bob.fit(X, y)
+    N_range = [4, 20, 60]
+    A_range = [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3]
+    jim_bob = Perceptron(500)
+
+    data = []
+    for n in N_range:
+        print("N: ", n)
+        data_cond = []
+        for a in A_range:
+            p = int(a*n)
+            print("P: ", p)
+            seperable_count = 0
+            for i in range(0,50):
+                X, y = jim_bob.generate_data(n, p)
+                if jim_bob.fit(X,y):
+                    seperable_count += 1
+            data_cond.append(seperable_count/50)
+        data.append(data_cond)
+
+    print(data)
