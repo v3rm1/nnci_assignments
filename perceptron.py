@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import matplotlib as plt
 
 class Perceptron:
     def __init__(self, epochs=100):
@@ -31,14 +32,16 @@ class Perceptron:
 
         # Defining the training strategy
         acc = []
+        hist_emb_strength = np.zeros(y.shape)
         for epoch in range(self.epochs):
             y_hat = []
             for s_idx, sample in enumerate(X):
                 pred = self.predict(sample, wt)
                 y_hat.append(pred)
                 if not pred == y[s_idx]:
-                    del_wt = (1/X.shape[1])*y[s_idx]*sample
+                    del_wt = y[s_idx]*sample
                     wt = np.add(wt, del_wt)
+                    hist_emb_strength[s_idx] += 1
             acc.append(self._compute_acc(y, y_hat))
             if acc[-1] == 1:
                 return 1
@@ -71,7 +74,7 @@ class Perceptron:
             return -1
 
 if __name__ == "__main__":
-    N_range = [4, 20, 60]
+    N_range = [8, 20, 40]
     A_range = [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3]
     jim_bob = Perceptron(500)
 
