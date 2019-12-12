@@ -76,7 +76,6 @@ class Perceptron:
 
 if __name__ == "__main__":
     N_range = [8, 20, 40]
-    # A_range = [0.75, 1, 1.25]
     A_range = [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3]
 
     model = Perceptron(500)
@@ -105,7 +104,7 @@ if __name__ == "__main__":
 
     ax.set(xlabel='alpha', ylabel='Probability of l.s.', title='Prob/alpha')
     ax.grid()
-    plt.legend(loc=2)
+    plt.legend(loc=1)
 
-    fig.savefig("test.png")
-    plt.show()
+    fig.savefig("alpha vs Probability of Linear Separability.png")
+    # plt.show()
