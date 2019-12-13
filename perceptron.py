@@ -4,7 +4,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 class Perceptron:
-    def __init__(self, epochs=100, c = 0):
+    def __init__(self, epochs=500, c = 0):
         self.epochs = epochs
         self.c = c
 
@@ -29,7 +29,7 @@ class Perceptron:
         Returns:
             None
         """
-        # Defining a weight vector, randomly initialised to values between 0 and 1. shape: 
+        # Defining a weight vector, initialised to 0. shape: numebr of features 
         wt = np.zeros(X.shape[1])
 
         # Defining the training strategy
@@ -59,42 +59,62 @@ class Perceptron:
             Prediction label that is either +1 or -1
         """
         E_mu = np.dot(x, np.transpose(wt))*y
-        if E_mu > c:
+        if E_mu > self.c:
             return 1
         else:
             return 0
 
 if __name__ == "__main__":
 
-    N_range = [10, 20]
+    N_range = [10, 30, 50]
     c_range = [0, 0.1, 0.2, 0.3, 0.4, 0.5]
-
+    A_range = [1.7, 1.8, 1.9, 2, 2.1, 2.2, 2.3]
     
+
+    # Dataframe to store the outputs of the perceptron
     plot_data = pd.DataFrame(columns=["N", "P", "Separable_Count", "alpha"])
+
+    model = Perceptron(500)
+
+    # Simulating the perceptron for multiple values of N and alpha
     for n in N_range:
         print("N: ", n)
-        for c in c_range:
-            p = n*2
-            model = Perceptron(200,c)
-            print("c: ", c)
+        for a in A_range:
+            p = int(n*a)
             seperable_count = 0
-            for i in range(0,500):
+            for i in range(0,1000):
                 X, y = model.generate_data(n, p)
                 if model.fit(X,y):
                     seperable_count += 1
-            plot_data = plot_data.append({"N": n, "c": c, "Separable_Count": seperable_count/200}, ignore_index=True)
-    plot_data.to_csv("Plot_Data_c.csv")
+            plot_data = plot_data.append({"N": n, "Alpha": a, "Separable_Count": seperable_count/1000}, ignore_index=True)
+    plot_data.to_csv(("Plot_Data_alpha.csv"))
+
+    # for n in N_range:
+    #     print("N: ", n)
+    #     for c in c_range:
+    #         p = n*2
+    #         model = Perceptron(500,c)
+    #         print("c: ", c)
+    #         seperable_count = 0
+    #         for i in range(0,500):
+    #             X, y = model.generate_data(n, p)
+    #             if model.fit(X,y):
+    #                 seperable_count += 1
+    #         plot_data = plot_data.append({"N": n, "c": c, "Separable_Count": seperable_count/200}, ignore_index=True)
+    # plot_data.to_csv("Plot_Data_c.csv")
     
-    x = c_range
+    # Defining a plotting function for plotting alpha versus Probability of linear separability.
+    x = A_range
     y1 = plot_data[plot_data["N"]==10]["Separable_Count"]
-    y2 = plot_data[plot_data["N"]==20]["Separable_Count"]
+    y2 = plot_data[plot_data["N"]==30]["Separable_Count"]
+    y3 = plot_data[plot_data["N"]==50]["Separable_Count"]
     fig, ax = plt.subplots()
     ax.plot(x,y1,c='b',marker="^",ls='--',label='N = 10',fillstyle='none')
-    ax.plot(x,y2,c='g',marker=(8,2,0),ls='--',label='N = 20')
-
-    ax.set(xlabel='c', ylabel='Probability of l.s.', title='prob l.s / c')
+    ax.plot(x,y2,c='g',marker=(8,2,0),ls='--',label='N = 30')
+    ax.plot(x,y3,c='c',marker=(8,2,0),ls=':',label='N = 50')
+    ax.set(xlabel='Alpha', ylabel='Probability of l.s.', title='prob l.s / alpha')
     ax.grid()
     plt.legend(loc=1)
 
-    fig.savefig("c vs Probability of Linear Separability.png")
+    fig.savefig("a_vs_P_ls.png")
     plt.show()
