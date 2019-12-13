@@ -1,20 +1,24 @@
 import matplotlib.pyplot as plt
+import pandas as pd
 
-x = [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3]
+A_range = [1.7, 1.8, 1.9, 2, 2.1, 2.2, 2.3]
 
-y1 = [1.0, 1.0, 0.96, 0.82, 0.56, 0.4, 0.3, 0.14, 0.1, 0.1]
-y2 = [1.0, 1.0, 1.0, 0.9, 0.66, 0.36, 0.12, 0.0, 0.04, 0.0]
-y3 = [1.0, 1.0, 1.0, 0.94, 0.8, 0.18, 0.08, 0.0, 0.0, 0.0]
-
+plot_data = pd.read_csv("Plot_Data2.csv")
+    
+x = A_range
+y1 = plot_data[plot_data["N"]==10]["Separable_Count"]
+y2 = plot_data[plot_data["N"]==20]["Separable_Count"]
+y3 = plot_data[plot_data["N"]==30]["Separable_Count"]
+y4 = plot_data[plot_data["N"]==40]["Separable_Count"]
 fig, ax = plt.subplots()
-
-ax.plot(x,y1,c='b',marker="^",ls='--',label='N = 8',fillstyle='none')
+ax.plot(x,y1,c='b',marker="^",ls='--',label='N = 10',fillstyle='none')
 ax.plot(x,y2,c='g',marker=(8,2,0),ls='--',label='N = 20')
-ax.plot(x,y3,c='k',ls='-',label='N = 40')
+ax.plot(x,y3,c='k',ls='-',label='N = 30')
+ax.plot(x,y4,c='c',ls='-',label='N = 40')
 
 ax.set(xlabel='alpha', ylabel='Probability of l.s.', title='Prob/alpha')
 ax.grid()
-plt.legend(loc=2)
+plt.legend(loc=1)
 
-fig.savefig("test.png")
+fig.savefig("alpha vs Probability of Linear Separability.png")
 plt.show()
