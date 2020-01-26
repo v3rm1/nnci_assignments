@@ -49,8 +49,6 @@ class Perceptron:
             w = w_new
         return w_new
 
-    def adatron_fit(self, X, y):
-
 
 
 if __name__ == "__main__":
