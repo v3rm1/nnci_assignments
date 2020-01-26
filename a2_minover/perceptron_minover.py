@@ -49,6 +49,9 @@ class Perceptron:
             w = w_new
         return w_new
 
+    def adatron_fit(self, X, y):
+
+
 
 if __name__ == "__main__":
     file_path = os.getcwd()
@@ -58,7 +61,7 @@ if __name__ == "__main__":
     
 
     # Dataframe to store the outputs of the perceptron
-    plot_data = pd.DataFrame(columns=["Alpha", "Generalization_Error"])
+    plot_data = pd.DataFrame(columns=["Alpha", "Generalization_Error", "Min_Kappa"])
 
     model = Perceptron(500)
 
@@ -73,11 +76,13 @@ if __name__ == "__main__":
             w_fit = model.minover_fit(X, y)
             gen_err[i] = acos(min(np.dot(w_fit,w_star)/(np.linalg.norm(w_fit)*np.linalg.norm(w_star)), 1))/pi
         avg_gen_err = np.mean(gen_err)
-        plot_data = plot_data.append({"Alpha": np.round(a), "Generalization_Error": avg_gen_err}, ignore_index=True)
+        kap_min = np.argmin(get_kappa(w_fit, X, y))
+        plot_data = plot_data.append({"Alpha": np.round(a), "Generalization_Error": avg_gen_err, "Min_Kappa": kap_min}, ignore_index=True)
     plot_data.to_csv(os.path.join(file_path, "output/Plot_Data_alpha.csv"))
 
        
     # Defining a plotting function for plotting alpha versus Probability of linear separability.
+    plt.clf()
     x = A_range
     y1 = plot_data["Generalization_Error"]
     fig, ax = plt.subplots()
@@ -87,4 +92,15 @@ if __name__ == "__main__":
     plt.legend(loc=1)
 
     fig.savefig(os.path.join(file_path, "output/a_vs_GE.png"))
-    plt.show()
+    # plt.show()
+    plt.clf()
+    x = A_range
+    y2 = plot_data["Min_Kappa"]
+    fig, ax = plt.subplots()
+    ax.plot(x,y2,c='b',marker="^",ls='--',fillstyle='none')
+    ax.set(xlabel='Alpha', ylabel=r'$\kappa(t_{max})$', title=r'$\kappa(t_{max})$ vs Alpha')
+    ax.grid()
+    plt.legend(loc=1)
+
+    fig.savefig(os.path.join(file_path, "output/a_vs_min_kap.png"))
+    # plt.show()
