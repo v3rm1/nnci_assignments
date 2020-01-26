@@ -44,7 +44,7 @@ class Perceptron:
         # print("Kappa: {}".format(kappa))
         return kappa
 
-     def rosenblatt_fit(self, X, y):
+    def rosenblatt_fit(self, X, y):
         # Defining a weight vector, initialised to 0. shape: numebr of features 
         wt = np.zeros(X.shape[1])
 
@@ -103,7 +103,7 @@ class Perceptron:
 if __name__ == "__main__":
     file_path = os.getcwd()
     print(file_path)
-    A_range = np.arange(0.1, 5, 0.1)
+    A_range = np.arange(0.1, 5, 0.2)
     N = 10
     lambda_val = 0.25
     
@@ -123,14 +123,14 @@ if __name__ == "__main__":
     for a in A_range:
         p = np.round(int(N*a))
         print("p_val: {}".format(p))
-        minover_err = np.zeros(100)
-        rosenblatt_err = np.zeros(100)
-        adatron_err = np.zeros(100)
-        noisy_minover_err = np.zeros(100)
-        noisy_rosenblatt_err = np.zeros(100)
-        noisy_adatron_err = np.zeros(100)
-        k_min = np.zeros(100)
-        for i in range(0,100):
+        minover_err = np.zeros(50)
+        rosenblatt_err = np.zeros(50)
+        adatron_err = np.zeros(50)
+        noisy_minover_err = np.zeros(50)
+        noisy_rosenblatt_err = np.zeros(50)
+        noisy_adatron_err = np.zeros(50)
+        k_min = np.zeros(50)
+        for i in range(0,50):
             w_star = model.generate_teacher_vec(N)
             X, y = model.generate_data(N, p, w_star)
             X_noisy, y_noisy = model.generate_noisy_data(n, p, w_star, lambda_val)
