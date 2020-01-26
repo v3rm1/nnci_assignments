@@ -74,7 +74,7 @@ if __name__ == "__main__":
             w_fit = model.minover_fit(X, y)
             gen_err[i] = acos(min(np.dot(w_fit,w_star)/(np.linalg.norm(w_fit)*np.linalg.norm(w_star)), 1))/pi
         avg_gen_err = np.mean(gen_err)
-        kap_min = np.argmin(get_kappa(w_fit, X, y))
+        kap_min = np.argmin(model.get_kappa(w_fit, X, y))
         plot_data = plot_data.append({"Alpha": np.round(a), "Generalization_Error": avg_gen_err, "Min_Kappa": kap_min}, ignore_index=True)
     plot_data.to_csv(os.path.join(file_path, "output/Plot_Data_alpha.csv"))
 
