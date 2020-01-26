@@ -33,7 +33,7 @@ class Perceptron:
         for i in range(p_data):
             for j in range(n_features):
                 X[i,j] = random.gauss(0,1)
-            y[i] = np.sign(np.dot(w_str, X[i])) if random.uniform()>lambda_val else -1 * np.sign(np.dot(w_str, X[i]))
+            y[i] = np.sign(np.dot(w_str, X[i])) if random.uniform(0, 1)>lambda_val else -1 * np.sign(np.dot(w_str, X[i]))
         return X, y
     
     
@@ -62,8 +62,15 @@ class Perceptron:
                     hist_emb_strength[s_idx] += 1
             acc.append(n_correct / X.shape[0])
             if acc[-1] == 1:
-                return 1
-        return 0
+                return wt
+        return wt
+    
+    def predict_correct(self, x, wt, y):
+        E_mu = np.dot(x, np.transpose(wt))*y
+        if E_mu > self.c:
+            return 1
+        else:
+            return 0
 
     def minover_fit(self, X, y):
         stop_fit = False
@@ -133,7 +140,7 @@ if __name__ == "__main__":
         for i in range(0,50):
             w_star = model.generate_teacher_vec(N)
             X, y = model.generate_data(N, p, w_star)
-            X_noisy, y_noisy = model.generate_noisy_data(n, p, w_star, lambda_val)
+            X_noisy, y_noisy = model.generate_noisy_data(N, p, w_star, lambda_val)
             # MinOver Fit
             w_fit_minover, conv_step_minover = model.minover_fit(X, y)
             w_noisy_minover,noisy_step_minover = model.minover_fit(X_noisy, y_noisy)
