@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 import os
 
 class Perceptron:
-    def __init__(self, epochs=500, c = 0):
+    def __init__(self, epochs=250, c = 0):
         self.epochs = epochs
         self.c = c
         self.threshold = pi/1000
@@ -110,8 +110,8 @@ class Perceptron:
 if __name__ == "__main__":
     file_path = os.getcwd()
     print(file_path)
-    A_range = np.arange(0.1, 5, 0.2)
-    N = 10
+    A_range = np.arange(0.25, 3, 0.25)
+    N = 5
     lambda_val = 0.25
     
 
