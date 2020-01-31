@@ -60,10 +60,12 @@ class Perceptron:
             w_old = w
             for i in range(X.shape[0]):
                 E = np.dot(w, X[i]) * y[i]
-                emb_str[i] = max(0, emb_str[i] + 0.01 *(1 - E))
-                w = sum([emb_str[j] * X[j] for j in range(len(emb_str))])/(X.shape[1])
+                emb_str[i] = max(0, emb_str[i] + 0.05 * (1.0 - E))
+                # print(emb_str[i])
+                w = sum([emb_str[j] * X[j] for j in range(len(emb_str))])
+            # print(w)
             w_angle = acos(min(np.dot(w,w_old)/(np.linalg.norm(w)*np.linalg.norm(w_old)), 1))
-            if np.abs(w_angle) < self.threshold:
+            if np.abs(w_angle) < pi/1000:
                 stop_fit = True
             converge_step += 1
         return w, converge_step
